@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "${id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": ["ModLabs"],
+  "contact": {
+    "homepage": "https://modlabs.cc"
+  },
+  "icon": "assets/permasnow/icon.png",
+  "license": "Apache-2.0",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "cc.modlabs.permasnow.PermaSnow"
+      }
+    ],
+    "preLaunch": [
+      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
+    ],
+    "modmenu": [
+      {
+        "adapter": "kotlin",
+        "value": "cc.modlabs.permasnow.ModMenuIntegration"
+      }
+    ]
+  },
+  "mixins": [
+    "permasnow.mixins.json"
+  ],
+  "depends": {
+    "fabric-api": "*",
+    "fabricloader": ">=0.14.22",
+    "fabric-language-kotlin": ">=1.11.0+kotlin.2.0.0",
+    "minecraft": "${mc}",
+    "java": ">=17",
+    "yet_another_config_lib_v3": ">=3.5.0"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
