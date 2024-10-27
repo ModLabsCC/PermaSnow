@@ -61,6 +61,7 @@ dependencies {
     }
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:$fapiVersion") // so you can do `depends: fabric-api` in FMJ
     modImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.flk")}")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.7.0")
 
     modApi("dev.isxander:yet-another-config-lib:${property("deps.yacl")}") {
         // was including old fapi version that broke things at runtime

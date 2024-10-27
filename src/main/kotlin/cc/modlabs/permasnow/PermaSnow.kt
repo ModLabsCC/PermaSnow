@@ -8,7 +8,7 @@ class PermaSnow : ClientModInitializer {
     val logger = LoggerFactory.getLogger("PermaSnow")
 
     companion object {
-        fun getConfig() = GeneralSettings()
+        fun getConfig() = GeneralSettings
     }
 
     override fun onInitializeClient() {

@@ -1,32 +1,52 @@
 package cc.modlabs.permasnow.config
 
 import com.mojang.serialization.Codec
+import dev.isxander.yacl3.api.OptionFlag
 import dev.isxander.yacl3.config.v3.JsonFileCodecConfig
 import dev.isxander.yacl3.config.v3.register
-import dev.isxander.yacl3.config.v3.value
-import net.fabricmc.loader.api.FabricLoader
+import dev.isxander.yacl3.dsl.*
+import dev.isxander.yacl3.platform.YACLPlatform
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.network.chat.Component
 
-open class GeneralSettings() : JsonFileCodecConfig<GeneralSettings>(
-    FabricLoader.getInstance().configDir.resolve("permasnow.json")
-) {
-    val alwaysSnow by register<Boolean>(default = true, Codec.BOOL)
-    val weatherChange by register<Boolean>(default = false, Codec.BOOL)
+object GeneralSettings : JsonFileCodecConfig<GeneralSettings>(YACLPlatform.getConfigDir().resolve("permasnow.json")) {
+    val alwaysSnow by register<Boolean>(false, Codec.BOOL)
+    val weatherChange by register<Boolean>(true, Codec.BOOL)
 
-    final val allSettings = arrayOf(
-        alwaysSnow,
-        weatherChange
-    )
-
-    constructor(settings: GeneralSettings) : this() {
-        this.alwaysSnow.value = settings.alwaysSnow.value
-        this.weatherChange.value = settings.weatherChange.value
-    }
-
-    companion object : GeneralSettings() {
-        init {
-            if (!loadFromFile()) {
-                saveToFile()
-            }
+    init {
+        if (!loadFromFile()) {
+            saveToFile()
         }
     }
+
+    fun generateConfigScreen(lastScreen: Screen?) = YetAnotherConfigLib("permasnow") {
+        title(Component.literal("Permasnow Settings"))
+
+        save {
+            saveToFile()
+        }
+
+        val settingsCategory by categories.registering {
+            name { Component.literal("Settings") }
+
+            tooltip {
+                +Component.translatable("Configure your weather settings.")
+            }
+
+            val snowOption by rootOptions.registering<Boolean> {
+                name { Component.literal("Always Snow") }
+                binding = alwaysSnow.asBinding()
+                controller = textSwitch { bool -> Component.literal(if (bool) "Enabled" else "Disabled") }
+                flag(OptionFlag.ASSET_RELOAD)
+            }
+
+            val weatherChangeOption by rootOptions.registering<Boolean> {
+                name { Component.literal("Weather Change") }
+                binding = weatherChange.asBinding()
+                controller = textSwitch { bool -> Component.literal(if (bool) "Enabled" else "Disabled") }
+                flag(OptionFlag.ASSET_RELOAD)
+            }
+        }
+    }.generateScreen(lastScreen)
 }
+

@@ -18,7 +18,8 @@ public abstract class MixinLevel {
 
     @Inject(at = @At("RETURN"), method = "getRainLevel", cancellable = true)
     public void getRainLevel(float delta, CallbackInfoReturnable<Float> cir) {
-        if (PermaSnow.Companion.getConfig().getWeatherChange().get()) {
+        boolean weatherChangeEnabled = PermaSnow.Companion.getConfig().getWeatherChange().get();
+        if (weatherChangeEnabled) {
             cir.setReturnValue(1.0F);
         } else {
             cir.setReturnValue(Mth.lerp(delta, oRainLevel, rainLevel));
